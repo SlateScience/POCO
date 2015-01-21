@@ -13,6 +13,7 @@ LINKMODE           ?= STATIC
 ANDROID_ABI        ?= armeabi
 POCO_TARGET_OSNAME  = Android
 POCO_TARGET_OSARCH  = $(ANDROID_ABI)
+OPENSSL_INCLUDE    = /Users/arielm/Downloads/openFrameworks-master/libs/openssl/include
 
 ifeq ($(ANDROID_ABI),armeabi)
 TOOL      = arm-linux-androideabi
@@ -83,7 +84,7 @@ RELEASEOPT_LINK = -O2
 #
 # System Specific Flags
 #
-SYSFLAGS = -DPOCO_ANDROID -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_WSTRING -DPOCO_NO_SHAREDMEMORY
+SYSFLAGS = -DPOCO_ANDROID -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_WSTRING -DPOCO_NO_SHAREDMEMORY -I$(OPENSSL_INCLUDE)
 
 #
 # System Specific Libraries
