@@ -19,35 +19,32 @@ ifndef POCO_BUILD
 export POCO_BUILD=$(POCO_BASE)
 endif
 
-# if we've built both static and shared, install shared
-ifeq ($(LINKMODE),BOTH)
-SHAREDONLY='(' -name static -prune ')' -o
-endif
+.PHONY: poco all libexecs cppunit tests samples clean distclean install
 
-.PHONY: all libexecs cppunit tests samples clean distclean install
-
+# TESTS and SAMPLES are set in config.make
+poco: libexecs $(if $(TESTS),tests) $(if $(SAMPLES),samples) 
 all: libexecs tests samples
 
 INSTALLDIR = $(DESTDIR)$(POCO_PREFIX)
 COMPONENTS = Foundation XML Util Net Crypto NetSSL_OpenSSL Data Data/SQLite Data/ODBC Data/MySQL Zip PageCompiler PageCompiler/File2Page
 
 cppunit:
-	$(MAKE) -C $(POCO_BASE)/CppUnit 
+  $(MAKE) -C $(POCO_BASE)/CppUnit 
 
 install: libexecs
 	mkdir -p $(INSTALLDIR)/include/Poco
-	mkdir -p $(INSTALLDIR)/lib$(LIB64SUFFIX)
+	mkdir -p $(INSTALLDIR)/lib
 	mkdir -p $(INSTALLDIR)/bin
 	for comp in $(COMPONENTS) ; do \
 		if [ -d "$(POCO_BASE)/$$comp/include" ] ; then \
 			cp -Rf $(POCO_BASE)/$$comp/include/* $(INSTALLDIR)/include/ ; \
 		fi ; \
 		if [ -d "$(POCO_BUILD)/$$comp/bin" ] ; then \
-			find $(POCO_BUILD)/$$comp/bin $(SHAREDONLY) '(' -perm -700 -type f -exec cp -f {} $(INSTALLDIR)/bin \; ')' ; \
+			find $(POCO_BUILD)/$$comp/bin -perm -700 -type f -exec cp -f {} $(INSTALLDIR)/bin \; ; \
 		fi ; \
 	done
-	find $(POCO_BUILD)/lib -name "libPoco*" -type f -exec cp -f {} $(INSTALLDIR)/lib$(LIB64SUFFIX) \;
-	find $(POCO_BUILD)/lib -name "libPoco*" -type l -exec cp -Rf {} $(INSTALLDIR)/lib$(LIB64SUFFIX) \;
+	find $(POCO_BUILD)/lib -name "libPoco*" -type f -exec cp -f {} $(INSTALLDIR)/lib \;
+	find $(POCO_BUILD)/lib -name "libPoco*" -type l -exec cp -Rf {} $(INSTALLDIR)/lib \;
 
 libexecs =  Foundation-libexec XML-libexec Util-libexec Net-libexec Crypto-libexec NetSSL_OpenSSL-libexec Data-libexec Data/SQLite-libexec Data/ODBC-libexec Data/MySQL-libexec Zip-libexec PageCompiler-libexec PageCompiler/File2Page-libexec
 tests    =  Foundation-tests XML-tests Util-tests Net-tests Crypto-tests NetSSL_OpenSSL-tests Data-tests Data/SQLite-tests Data/ODBC-tests Data/MySQL-tests Zip-tests

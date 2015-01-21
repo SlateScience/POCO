@@ -3,12 +3,8 @@ Foundation
 XML
 Util
 Net
-Crypto
-NetSSL_OpenSSL
+Zip
 Data
 Data/SQLite
-Data/ODBC
-Data/MySQL
-Zip
-PageCompiler
-PageCompiler/File2Page
+Crypto
+NetSSL_OpenSSL
