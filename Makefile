@@ -28,8 +28,8 @@ all: libexecs tests samples
 INSTALLDIR = $(DESTDIR)$(POCO_PREFIX)
 COMPONENTS = Foundation XML Util Net Crypto NetSSL_OpenSSL Data Data/SQLite Data/ODBC Data/MySQL Zip PageCompiler PageCompiler/File2Page
 
-cppunit:
-  $(MAKE) -C $(POCO_BASE)/CppUnit 
+# cppunit:
+#     $(MAKE) -C $(POCO_BASE)/CppUnit
 
 install: libexecs
 	mkdir -p $(INSTALLDIR)/include/Poco
