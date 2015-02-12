@@ -54,10 +54,10 @@ export POCO_BUILD
 cwd = $(shell pwd)
 inpoco = $(shell echo | awk '{print index("$(cwd)","$(POCO_BASE)")}')
 inproj = $(shell echo | awk '{print index("$(cwd)","$(PROJECT_BASE)")}')
-ifneq ($(inpoco),0)
+ifeq ($(inpoco),1)
 PROJECT_BASE = $(POCO_BASE)
 else
-ifneq ($(inproj),0)
+ifeq ($(inproj),1)
 else
 $(error Current working directory not under $$PROJECT_BASE)
 endif
@@ -117,21 +117,6 @@ endif
 include $(POCO_BASE)/build/config/$(POCO_CONFIG)
 
 #
-# Determine operating system
-#
-ifndef POCO_TARGET_OSNAME
-OSNAME   := $(POCO_HOST_OSNAME)
-else
-OSNAME   := $(POCO_TARGET_OSNAME)
-endif
-ifndef POCO_TARGET_OSARCH
-OSARCH   := $(subst /,-,$(shell uname -m | tr ' ' _))
-else
-OSARCH   := $(POCO_TARGET_OSARCH)
-endif
-HOSTNAME := $(shell hostname)
-
-#
 # Check if a 64bit build is requested
 #
 ifndef OSARCH_64BITS
@@ -145,25 +130,19 @@ OSARCH_POSTFIX =
 endif
 
 #
-# Detect distro
+# Determine operating system
 #
-
-# Fedora, Redhat, Centos.
-REDHATISH = $(if $(wildcard /etc/redhat-release /etc/centos-release /etc/fedora-release),1)
-# Debian, Ubuntu
-DEBIANISH = $(if $(wildcard /etc/debian_version),1)
-
-#
-# Adjust suffix for 64-bit lib directory
-#
-ifneq ($(REDHATISH),)
-LIB64SUFFIX = $(if $(filter $(OSARCH),x86_64 sparc64 ppc64),64,)
-else ifneq ($(DEBIANISH),)
-LIB64SUFFIX = $(if $(filter $(OSARCH),x86_64 sparc64 ppc64),/x86_64-linux-gnu,)
+ifndef POCO_TARGET_OSNAME
+OSNAME   := $(POCO_HOST_OSNAME)
+else
+OSNAME   := $(POCO_TARGET_OSNAME)
 endif
-
-# Default static lib extension
-STATICLIBLINKEXT = .a
+ifndef POCO_TARGET_OSARCH
+OSARCH   := $(subst /,-,$(shell uname -m | tr ' ' _))
+else
+OSARCH   := $(POCO_TARGET_OSARCH)
+endif
+HOSTNAME := $(shell hostname)
 
 #
 # Find out current component
