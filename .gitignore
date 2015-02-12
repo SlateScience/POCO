@@ -77,3 +77,5 @@ bin/
 bin64/
 pocomsg.h
 
+dist
+config.make
